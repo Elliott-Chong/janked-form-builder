@@ -107,4 +107,19 @@ export const formRouter = createTRPCRouter({
         }),
       );
     }),
+  publishForm: protectedProcedure
+    .input(
+      z.object({
+        formSchemaId: z.string(),
+        published: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.formSchema.update({
+        where: { id: input.formSchemaId },
+        data: {
+          published: input.published,
+        },
+      });
+    }),
 });

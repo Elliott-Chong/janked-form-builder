@@ -1,15 +1,27 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
+import { Switch } from "./ui/switch";
+import type { FormSchema } from "@prisma/client";
+import { api } from "@/utils/api";
 
-type Props = { name: string };
+type Props = { formScehma: FormSchema };
 
-const FormBuilderTopCard = ({ name }: Props) => {
+const FormBuilderTopCard = ({ formScehma }: Props) => {
+  const [published, setPublished] = React.useState(formScehma.published);
+  const publishForm = api.form.publishForm.useMutation();
+  React.useEffect(() => {
+    publishForm
+      .mutateAsync({ formSchemaId: formScehma.id, published })
+      .catch(console.error);
+  }, [published]);
   return (
     <div className="rounded-lg border border-t-8 border-t-gray-800 px-6 py-8 shadow-xl">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-semibold">Form Builder - {name}</h2>
+          <h2 className="text-3xl font-semibold">
+            Form Builder - {formScehma.name}
+          </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Drag and drop the form elements below to build your form.
           </p>
@@ -20,6 +32,13 @@ const FormBuilderTopCard = ({ name }: Props) => {
             Preview
           </Button>
           <Button variant="outline">Responses</Button>
+          <div className="flex items-center">
+            <Switch
+              checked={published}
+              onCheckedChange={() => setPublished(!published)}
+            />
+            <span className="ml-2 text-xs">Published</span>
+          </div>
         </div>
       </div>
     </div>

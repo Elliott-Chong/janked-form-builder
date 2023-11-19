@@ -11,7 +11,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import FormFieldAdderButtons from "./FormFieldAdderButtons";
-import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import { DndContext, type DragEndEvent, closestCenter } from "@dnd-kit/core";
 import FormFieldRow from "./FormFieldRow";
 import { api } from "@/utils/api";
 
@@ -61,8 +61,7 @@ export function FormBuilder({ formSchema }: Props) {
 
   return (
     <div className="">
-      <FormBuilderTopCard name={formSchema.name} />
-
+      <FormBuilderTopCard formScehma={formSchema} />
       <div className="h-8"></div>
       <div className="grid grid-cols-1 gap-4">
         <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
