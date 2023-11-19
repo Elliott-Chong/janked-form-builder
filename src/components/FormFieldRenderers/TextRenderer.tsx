@@ -62,7 +62,10 @@ const TextRenderer = ({ formField }: Props) => {
                   .mutateAsync({
                     description: debouncedDescription,
                     fieldId: formField.id,
-                    name: labelRef.current?.textContent ?? "",
+                    name:
+                      labelRef.current?.textContent
+                        ?.trim()
+                        .replaceAll("\n", "") ?? "",
                     required: !required,
                   })
                   .catch(console.error);

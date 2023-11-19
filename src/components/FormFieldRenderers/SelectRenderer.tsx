@@ -2,14 +2,7 @@ import type { FormField } from "@prisma/client";
 import React from "react";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import {
-  ChevronDownCircle,
-  ChevronRightCircle,
-  FormInput,
-  Pencil,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { ChevronDownCircle, Pencil, Plus, Trash2 } from "lucide-react";
 import { useDebounce } from "../hooks/useDebounce";
 import { api } from "@/utils/api";
 import { Switch } from "../ui/switch";
@@ -47,7 +40,8 @@ const SelectRenderer = ({ formField }: Props) => {
         .mutateAsync({
           description: debouncedDescription,
           fieldId: formField.id,
-          name: labelRef.current?.textContent ?? "",
+          name:
+            labelRef.current?.textContent?.trim().replaceAll("\n", "") ?? "",
           required,
         })
         .catch(console.error);

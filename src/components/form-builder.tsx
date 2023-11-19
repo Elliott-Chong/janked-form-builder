@@ -31,10 +31,10 @@ export function FormBuilder({ formSchema }: Props) {
 
       <div className="h-8"></div>
       <div className="grid grid-cols-1 gap-4">
-        <FormFieldAdderButtons formSchemaId={formSchema.id} />
         {formFields.map((formField) => {
           return <FormFieldRow formField={formField} key={formField.id} />;
         })}
+        <FormFieldAdderButtons formSchemaId={formSchema.id} />
       </div>
     </div>
   );

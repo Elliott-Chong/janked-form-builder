@@ -82,7 +82,7 @@ const FormFieldAdderButtons = ({ formSchemaId }: Props) => {
               <AlignVerticalSpaceBetween
                 className="mr-2 h-4 w-4"
                 strokeWidth={2.3}
-              />{" "}
+              />
               Spacer
             </DropdownMenuItem>
           </DropdownMenuContent>
