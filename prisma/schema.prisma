@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -24,6 +24,61 @@ model Post {
     createdById String
 
     @@index([name])
+}
+
+model FormSchema {
+    id          String   @id @default(cuid())
+    name        String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    description String?
+    archived    Boolean  @default(false)
+    imageUrl    String?
+    createdById String
+    createdBy   User     @relation(fields: [createdById], references: [id])
+
+    formFields FormField[]
+}
+
+model FormField {
+    id          String  @id @default(cuid())
+    name        String
+    description String?
+
+    order Int
+
+    formFieldType FormFieldType
+    required      Boolean       @default(false)
+    isInput       Boolean       @default(false)
+
+    formSchema   FormSchema @relation(fields: [formSchemaId], references: [id])
+    formSchemaId String
+    options      String?
+
+    formValues FormValue[]
+}
+
+model FormValue {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    formFieldId String
+    formField   FormField @relation(fields: [formFieldId], references: [id])
+
+    value String?
+}
+
+enum FormFieldType {
+    TEXT
+    TEXTAREA
+    SELECT
+    HEADING
+    PARAGRAPH
+    SPACER
 }
 
 // Necessary for Next auth
@@ -54,14 +109,16 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?      @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    FormValue     FormValue[]
+    FormSchema    FormSchema[]
 }
 
 model VerificationToken {
