@@ -4,6 +4,7 @@ import { Eye } from "lucide-react";
 import { Switch } from "./ui/switch";
 import type { FormSchema } from "@prisma/client";
 import { api } from "@/utils/api";
+import Link from "next/link";
 
 type Props = { formScehma: FormSchema };
 
@@ -27,10 +28,12 @@ const FormBuilderTopCard = ({ formScehma }: Props) => {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button>
-            <Eye className="mr-2 h-4 w-4" />
-            Preview
-          </Button>
+          <Link href={`/preview/${formScehma.id}`}>
+            <Button>
+              <Eye className="mr-2 h-4 w-4" />
+              Preview
+            </Button>
+          </Link>
           <Button variant="outline">Responses</Button>
           <div className="flex items-center">
             <Switch
