@@ -88,4 +88,23 @@ export const formRouter = createTRPCRouter({
       });
       return formFields;
     }),
+  rearrangeFields: protectedProcedure
+    .input(
+      z.object({
+        formSchemaId: z.string(),
+        fieldIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await Promise.all(
+        input.fieldIds.map(async (fieldId, index) => {
+          await ctx.db.formField.update({
+            where: { id: fieldId },
+            data: {
+              order: index,
+            },
+          });
+        }),
+      );
+    }),
 });

@@ -5,7 +5,13 @@
 import type { FormField, FormSchema } from "@prisma/client";
 import React from "react";
 import FormBuilderTopCard from "./FormBuilderTopCard";
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import FormFieldAdderButtons from "./FormFieldAdderButtons";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import FormFieldRow from "./FormFieldRow";
 import { api } from "@/utils/api";
 
@@ -25,15 +31,50 @@ export function FormBuilder({ formSchema }: Props) {
       staleTime: Infinity,
     },
   );
+  const [_formFields, setFormFields] = React.useState(formFields);
+  const rearrangeFields = api.form.rearrangeFields.useMutation();
+  React.useEffect(() => {
+    setFormFields(formFields);
+  }, [formFields]);
+
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id === over?.id) return;
+    setFormFields((formFields) => {
+      const oldIndex = formFields.findIndex(
+        (formField) => formField.id === active.id,
+      );
+      const newIndex = formFields.findIndex(
+        (formField) => formField.id === over?.id,
+      );
+      const newFields = arrayMove(formFields, oldIndex, newIndex);
+      rearrangeFields
+        .mutateAsync({
+          formSchemaId: formSchema.id,
+          fieldIds: newFields.map((formField) => formField.id),
+        })
+        .catch(console.error);
+
+      return newFields;
+    });
+  };
+
   return (
     <div className="">
       <FormBuilderTopCard name={formSchema.name} />
 
       <div className="h-8"></div>
       <div className="grid grid-cols-1 gap-4">
-        {formFields.map((formField) => {
-          return <FormFieldRow formField={formField} key={formField.id} />;
-        })}
+        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+          <SortableContext
+            strategy={verticalListSortingStrategy}
+            items={formFields}
+          >
+            {_formFields.map((formField) => {
+              return <FormFieldRow formField={formField} key={formField.id} />;
+            })}
+          </SortableContext>
+        </DndContext>
         <FormFieldAdderButtons formSchemaId={formSchema.id} />
       </div>
     </div>

@@ -5,14 +5,22 @@ import TextAreaRenderer from "./FormFieldRenderers/TextAreaRenderer";
 import SelectRenderer from "./FormFieldRenderers/SelectRenderer";
 import HeadingRenderer from "./FormFieldRenderers/HeadingRenderer";
 import ParagraphRenderer from "./FormFieldRenderers/ParagraphRenderer";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
   formField: FormField;
 };
 
 const FormFieldRow = ({ formField }: Props) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: formField.id });
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
   return (
-    <>
+    <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
       {formField.formFieldType === "TEXT" && (
         <TextRenderer formField={formField} />
       )}
@@ -28,7 +36,7 @@ const FormFieldRow = ({ formField }: Props) => {
       {formField.formFieldType === "PARAGRAPH" && (
         <ParagraphRenderer formField={formField} />
       )}
-    </>
+    </div>
   );
 };
 
