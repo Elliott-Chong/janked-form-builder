@@ -11,7 +11,17 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import FormFieldAdderButtons from "./FormFieldAdderButtons";
-import { DndContext, type DragEndEvent, closestCenter } from "@dnd-kit/core";
+import {
+  DndContext,
+  type DragEndEvent,
+  closestCenter,
+  useSensor,
+  MouseSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core";
 import FormFieldRow from "./FormFieldRow";
 import { api } from "@/utils/api";
 
@@ -59,12 +69,41 @@ export function FormBuilder({ formSchema }: Props) {
     });
   };
 
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
+  const touchSensor = useSensor(TouchSensor);
+  const keyboardSensor = useSensor(KeyboardSensor, {
+    keyboardCodes: {
+      start: [""],
+      cancel: [""],
+      end: [""],
+    },
+  });
+  const sensors = useSensors(
+    mouseSensor,
+    touchSensor,
+    keyboardSensor,
+    pointerSensor,
+  );
+
   return (
     <div className="">
       <FormBuilderTopCard formScehma={formSchema} />
       <div className="h-8"></div>
       <div className="grid grid-cols-1 gap-4">
-        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={onDragEnd}
+          sensors={sensors}
+        >
           <SortableContext
             strategy={verticalListSortingStrategy}
             items={formFields}

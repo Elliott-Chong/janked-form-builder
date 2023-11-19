@@ -78,13 +78,13 @@ const FormFieldAdderButtons = ({ formSchemaId }: Props) => {
             <DropdownMenuItem onClick={() => handleAdd("PARAGRAPH")}>
               <Pilcrow className="mr-2 h-4 w-4" strokeWidth={2.3} /> Paragraph
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleAdd("SPACER")}>
+            {/* <DropdownMenuItem onClick={() => handleAdd("SPACER")}>
               <AlignVerticalSpaceBetween
-                className="mr-2 h-4 w-4"
+                className="w-4 h-4 mr-2"
                 strokeWidth={2.3}
               />
               Spacer
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
         <Separator className="flex-1" />

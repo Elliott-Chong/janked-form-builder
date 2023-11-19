@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { FormFieldType } from "@prisma/client";
 
 export const formRouter = createTRPCRouter({
@@ -8,6 +12,7 @@ export const formRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
+        description: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -15,6 +20,7 @@ export const formRouter = createTRPCRouter({
         data: {
           name: input.name,
           createdById: ctx.session.user.id,
+          description: input.description,
         },
       });
       return { id: form.id };
@@ -33,6 +39,7 @@ export const formRouter = createTRPCRouter({
       const formField = await ctx.db.formField.create({
         data: {
           formFieldType: input.fieldType,
+          isInput: ["TEXT", "TEXTAREA", "SELECT"].includes(input.fieldType),
           order: allFormFieldsLength,
           required: false,
           name: "New Field",
@@ -121,5 +128,72 @@ export const formRouter = createTRPCRouter({
           published: input.published,
         },
       });
+    }),
+  createFormSubmission: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+        formSchemaId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const formSubmission = await ctx.db.formSubmission.create({
+        data: {
+          userEmail: input.email,
+          formSchemaId: input.formSchemaId,
+        },
+      });
+
+      const formFields = await ctx.db.formField.findMany({
+        where: { formSchemaId: input.formSchemaId },
+      });
+      await ctx.db.formValue.createMany({
+        data: formFields.map((formField) => ({
+          formFieldId: formField.id,
+          formSubmissionId: formSubmission.id,
+          value: "",
+        })),
+      });
+
+      return { id: formSubmission.id };
+    }),
+  getSubmissionFields: publicProcedure
+    .input(
+      z.object({
+        formSubmissionId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const formValues = await ctx.db.formValue.findMany({
+        where: { formSubmissionId: input.formSubmissionId },
+        include: {
+          formField: true,
+        },
+      });
+      return formValues;
+    }),
+  submitForm: publicProcedure
+    .input(
+      z.object({
+        formSubmissionId: z.string(),
+        values: z.array(
+          z.object({
+            id: z.string(),
+            value: z.string(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await Promise.all(
+        input.values.map(async (value) => {
+          await ctx.db.formValue.update({
+            where: { id: value.id },
+            data: {
+              value: value.value,
+            },
+          });
+        }),
+      );
     }),
 });

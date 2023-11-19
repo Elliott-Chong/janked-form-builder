@@ -30,7 +30,7 @@ const SelectRenderer = ({ formField }: Props) => {
 
   React.useEffect(() => {
     if (formField.options) {
-      setOptions(JSON.parse(formField.options as string) as string[]);
+      setOptions(JSON.parse(formField.options) as string[]);
     }
   }, [formField.options]);
 
@@ -40,8 +40,7 @@ const SelectRenderer = ({ formField }: Props) => {
         .mutateAsync({
           description: debouncedDescription,
           fieldId: formField.id,
-          name:
-            labelRef.current?.textContent?.trim().replaceAll("\n", "") ?? "",
+          name: labelRef.current?.textContent ?? "",
           required,
         })
         .catch(console.error);

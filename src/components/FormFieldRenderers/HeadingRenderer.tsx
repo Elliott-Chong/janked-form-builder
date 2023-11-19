@@ -32,9 +32,7 @@ const HeadingRenderer = ({ formField }: Props) => {
                 .mutateAsync({
                   description: "",
                   fieldId: formField.id,
-                  name:
-                    e.currentTarget.textContent?.trim().replaceAll("\n", "") ??
-                    "",
+                  name: e.currentTarget.textContent ?? "",
                   required: false,
                 })
                 .catch(console.error);

@@ -38,7 +38,8 @@ model FormSchema {
     createdBy   User     @relation(fields: [createdById], references: [id])
     published   Boolean  @default(false)
 
-    formFields FormField[]
+    formFields     FormField[]
+    formSubmission formSubmission[]
 }
 
 model FormField {
@@ -64,13 +65,27 @@ model FormValue {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    userId String
-    user   User   @relation(fields: [userId], references: [id])
-
     formFieldId String
     formField   FormField @relation(fields: [formFieldId], references: [id])
 
-    value String?
+    value            String          @default("")
+    User             User?           @relation(fields: [userId], references: [id])
+    userId           String?
+    formSubmission   formSubmission? @relation(fields: [formSubmissionId], references: [id])
+    formSubmissionId String?
+}
+
+model formSubmission {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    formSchemaId String
+    formSchema   FormSchema @relation(fields: [formSchemaId], references: [id])
+    completed    Boolean    @default(false)
+    userEmail    String
+
+    formValues FormValue[]
 }
 
 enum FormFieldType {
