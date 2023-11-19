@@ -5,8 +5,8 @@ import { type AppType } from "next/app";
 import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
-import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
+import { cn } from "@/lib/utils";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -15,9 +15,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <Providers>
       <SessionProvider session={session}>
-        <Navbar />
-        <div className="h-20"></div>
-        <Component {...pageProps} />
+        <main className={cn("grainy min-h-screen")}>
+          <Component {...pageProps} />
+        </main>
       </SessionProvider>
     </Providers>
   );
