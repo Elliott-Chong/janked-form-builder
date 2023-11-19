@@ -196,4 +196,31 @@ export const formRouter = createTRPCRouter({
         }),
       );
     }),
+  deleteForm: protectedProcedure
+    .input(
+      z.object({
+        formId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.formSchema.delete({
+        where: { id: input.formId },
+      });
+      return { success: true };
+    }),
+  archiveForm: protectedProcedure
+    .input(
+      z.object({
+        formId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.formSchema.update({
+        where: { id: input.formId },
+        data: {
+          archived: true,
+        },
+      });
+      return { success: true };
+    }),
 });

@@ -2,20 +2,24 @@ import CreateFormEmptyState from "@/components/CreateFormEmptyState";
 import Navbar from "@/components/Navbar";
 import { FormCards } from "@/components/form-cards";
 import { getServerAuthSession } from "@/server/auth";
+import { db } from "@/server/db";
+import type { FormSchema } from "@prisma/client";
 import type { GetServerSideProps } from "next";
-import { User } from "next-auth";
+import type { User } from "next-auth";
 import React from "react";
 
 type Props = {
   user: User;
+  forms: FormSchema[];
 };
 
-const DashboardPage = ({ user }: Props) => {
+const DashboardPage = ({ user, forms }: Props) => {
   return (
     <>
       <Navbar user={user} />
       <div className="mx-auto max-w-6xl">
-        <FormCards />
+        <FormCards forms={forms} />
+        <div className="h-8"></div>
         <CreateFormEmptyState />
       </div>
     </>
@@ -32,8 +36,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
+  const allFormCards = await db.formSchema.findMany({
+    where: { createdById: session.user.id, archived: false },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
   return {
-    props: { user: session.user },
+    props: {
+      user: session.user,
+      forms: JSON.parse(JSON.stringify(allFormCards)) as FormSchema[],
+    },
   };
 };
 
