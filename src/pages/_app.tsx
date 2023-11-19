@@ -5,15 +5,21 @@ import { type AppType } from "next/app";
 import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
+import Navbar from "@/components/Navbar";
+import Providers from "@/components/Providers";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <Providers>
+      <SessionProvider session={session}>
+        <Navbar />
+        <div className="h-20"></div>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </Providers>
   );
 };
 
