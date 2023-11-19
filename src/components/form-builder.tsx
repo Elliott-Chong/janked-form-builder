@@ -24,6 +24,10 @@ import {
 } from "@dnd-kit/core";
 import FormFieldRow from "./FormFieldRow";
 import { api } from "@/utils/api";
+import { useRouter } from "next/router";
+import ResponsesTable from "./ResponsesTable";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type Props = {
   formSchema: FormSchema & {
@@ -32,6 +36,12 @@ type Props = {
 };
 
 export function FormBuilder({ formSchema }: Props) {
+  const router = useRouter();
+  React.useEffect(() => {
+    if (!router.query.tab) {
+      router.push(`/builder/${formSchema.id}?tab=edit`).catch(console.error);
+    }
+  }, [router, formSchema.id]);
   const { data: formFields } = api.form.getAllFormFields.useQuery(
     {
       formSchemaId: formSchema.id,
@@ -98,23 +108,67 @@ export function FormBuilder({ formSchema }: Props) {
     <div className="">
       <FormBuilderTopCard formScehma={formSchema} />
       <div className="h-8"></div>
-      <div className="grid grid-cols-1 gap-4">
-        <DndContext
-          collisionDetection={closestCenter}
-          onDragEnd={onDragEnd}
-          sensors={sensors}
-        >
-          <SortableContext
-            strategy={verticalListSortingStrategy}
-            items={formFields}
-          >
-            {_formFields.map((formField) => {
-              return <FormFieldRow formField={formField} key={formField.id} />;
-            })}
-          </SortableContext>
-        </DndContext>
-        <FormFieldAdderButtons formSchemaId={formSchema.id} />
+      <div className="hidden sm:block">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+            {[
+              {
+                name: "Edit",
+                tab: `edit`,
+              },
+              {
+                name: "Responses",
+                tab: `responses`,
+              },
+            ].map((tab) => (
+              <Link
+                key={tab.name}
+                href={{
+                  href: `/builder/${formSchema.id}`,
+                  query: {
+                    ...router.query,
+                    tab: tab.tab,
+                  },
+                }}
+                className={cn(
+                  router.query.tab === tab.tab
+                    ? "border-gray-500 text-gray-600"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                  "whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium",
+                )}
+              >
+                {tab.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
+      <div className="h-4"></div>
+      {router.query.tab === "responses" ? (
+        <ResponsesTable formSchemaId={formSchema.id} />
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-4">
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={onDragEnd}
+              sensors={sensors}
+            >
+              <SortableContext
+                strategy={verticalListSortingStrategy}
+                items={formFields}
+              >
+                {_formFields.map((formField) => {
+                  return (
+                    <FormFieldRow formField={formField} key={formField.id} />
+                  );
+                })}
+              </SortableContext>
+            </DndContext>
+            <FormFieldAdderButtons formSchemaId={formSchema.id} />
+          </div>
+        </>
+      )}
     </div>
   );
 }

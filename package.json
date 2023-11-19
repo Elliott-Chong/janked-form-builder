@@ -28,6 +28,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@t3-oss/env-nextjs": "^0.7.0",
     "@tanstack/react-query": "^4.32.6",
+    "@tanstack/react-table": "^8.10.7",
     "@trpc/client": "^10.37.1",
     "@trpc/next": "^10.37.1",
     "@trpc/react-query": "^10.37.1",

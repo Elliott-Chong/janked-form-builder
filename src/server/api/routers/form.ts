@@ -185,6 +185,12 @@ export const formRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await ctx.db.formSubmission.update({
+        where: { id: input.formSubmissionId },
+        data: {
+          completed: true,
+        },
+      });
       await Promise.all(
         input.values.map(async (value) => {
           await ctx.db.formValue.update({
@@ -222,5 +228,44 @@ export const formRouter = createTRPCRouter({
         },
       });
       return { success: true };
+    }),
+  getResponses: protectedProcedure
+    .input(
+      z.object({
+        formSchemaId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const formSubmissions = await ctx.db.formSubmission.findMany({
+        where: { formSchemaId: input.formSchemaId },
+        include: {
+          formValues: {
+            where: {
+              formField: {
+                isInput: true,
+              },
+            },
+            include: {
+              formField: true,
+            },
+            orderBy: {
+              formField: {
+                order: "asc",
+              },
+            },
+          },
+          formSchema: {
+            include: {
+              formFields: {
+                orderBy: { order: "asc" },
+                where: {
+                  isInput: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return formSubmissions;
     }),
 });

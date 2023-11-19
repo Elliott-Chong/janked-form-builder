@@ -5,12 +5,14 @@ import { Switch } from "./ui/switch";
 import type { FormSchema } from "@prisma/client";
 import { api } from "@/utils/api";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 type Props = { formScehma: FormSchema };
 
 const FormBuilderTopCard = ({ formScehma }: Props) => {
   const [published, setPublished] = React.useState(formScehma.published);
   const publishForm = api.form.publishForm.useMutation();
+  const router = useRouter();
   React.useEffect(() => {
     publishForm
       .mutateAsync({ formSchemaId: formScehma.id, published })
@@ -29,12 +31,22 @@ const FormBuilderTopCard = ({ formScehma }: Props) => {
         </div>
         <div className="flex items-center gap-3">
           <Link href={`/preview/${formScehma.id}`}>
-            <Button>
+            <Button variant={"outline"}>
               <Eye className="mr-2 h-4 w-4" />
               Preview
             </Button>
           </Link>
-          <Button variant="outline">Responses</Button>
+          {/* <Link
+            href={{
+              href: `/builder/${formScehma.id}`,
+              query: {
+                ...router.query,
+                tab: "responses",
+              },
+            }}
+          >
+            <Button variant="outline">Responses</Button>
+          </Link> */}
           <div className="flex items-center">
             <Switch
               checked={published}
