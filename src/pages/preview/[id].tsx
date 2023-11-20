@@ -37,13 +37,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
   const formSchema = await db.formSchema.findFirstOrThrow({
-    where: { id: id as string },
+    where: { id: id as string, createdById: session.user.id },
     include: {
       formFields: {
         orderBy: { order: "asc" },
       },
     },
   });
+  if (!formSchema) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       user: session.user,

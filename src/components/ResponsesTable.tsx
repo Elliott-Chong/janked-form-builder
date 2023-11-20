@@ -19,7 +19,9 @@ const ResponsesTable = ({ formSchemaId }: Props) => {
           <div className="mx-auto mt-4 flex w-fit flex-col items-center">
             <Ghost className="h-12 w-12" />
             <div className="h-2"></div>
-            <h1 className="font-miedum text-xl">No submissions yet...</h1>
+            <h1 className="text-lg font-medium text-gray-600">
+              No submissions yet...
+            </h1>
           </div>
         </>
       ) : (
