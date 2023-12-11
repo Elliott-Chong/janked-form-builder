@@ -14,6 +14,12 @@ const config = {
         hostname: "lh3.googleusercontent.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname:
+          "elliott-janked-form-builder-s-publicbucket5c3dbab0-ack0zj6uubwi.s3.ap-southeast-1.amazonaws.com",
+        pathname: "**",
+      },
     ],
   },
 

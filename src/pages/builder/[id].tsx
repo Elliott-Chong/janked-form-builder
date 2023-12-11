@@ -17,7 +17,7 @@ const FormBuilderPage = ({ user, formSchema }: Props) => {
   return (
     <>
       <Navbar user={user} />
-      <div className="mx-auto max-w-4xl pb-20">
+      <div className="mx-auto max-w-4xl px-10 pb-20">
         <FormBuilder formSchema={formSchema} />
       </div>
     </>

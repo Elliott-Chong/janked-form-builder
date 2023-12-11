@@ -20,7 +20,7 @@ const DashboardPage = ({ user, forms }: Props) => {
   return (
     <>
       <Navbar user={user} />
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl px-10">
         <SearchForms setForms={setForms} forms={forms} />
         <div className="h-6"></div>
         {_forms.length === 0 && (

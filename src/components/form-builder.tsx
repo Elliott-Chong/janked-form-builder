@@ -39,7 +39,7 @@ export function FormBuilder({ formSchema }: Props) {
   const router = useRouter();
   React.useEffect(() => {
     if (!router.query.tab) {
-      router.push(`/builder/${formSchema.id}?tab=edit`).catch(console.error);
+      router.replace(`/builder/${formSchema.id}?tab=edit`).catch(console.error);
     }
   }, [router, formSchema.id]);
   const { data: formFields } = api.form.getAllFormFields.useQuery(

@@ -229,6 +229,17 @@ export const formRouter = createTRPCRouter({
       });
       return { success: true };
     }),
+  uploadImage: protectedProcedure
+    .input(z.object({ imageUrl: z.string(), formSchemaId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.formSchema.update({
+        where: { id: input.formSchemaId },
+        data: {
+          imageUrl: input.imageUrl,
+        },
+      });
+      return { success: true };
+    }),
   getResponses: protectedProcedure
     .input(
       z.object({
