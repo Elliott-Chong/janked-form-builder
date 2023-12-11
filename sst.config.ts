@@ -22,6 +22,7 @@ export default {
           GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET!,
         },
         bind: [bucket],
+        warm: 1,
       });
 
       stack.addOutputs({
