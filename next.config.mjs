@@ -20,6 +20,12 @@ const config = {
           "elliott-janked-form-builder-s-publicbucket5c3dbab0-ack0zj6uubwi.s3.ap-southeast-1.amazonaws.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname:
+          "prod-janked-form-builder-site-publicbucket5c3dbab0-34uuleu6rnzd.s3.ap-southeast-1.amazonaws.com",
+        pathname: "**",
+      },
     ],
   },
 
