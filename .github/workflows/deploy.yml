@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build & Deploy
+        env:
+          DATABASE_URL: ${{secrets.DATABASE_URL}}
+          NEXTAUTH_SECRET: ${{secrets.NEXTAUTH_SECRET}}
+          NEXTAUTH_URL: ${{secrets.NEXTAUTH_URL}}
+          NEXT_PUBLIC_URL: ${{secrets.NEXT_PUBLIC_URL}}
+          GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+          GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+        run: |
+          npx prisma generate
+          npx sst deploy
