@@ -11,6 +11,10 @@ jobs:
     environment: Production
     steps:
       - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1 # Setup bun
+        with:
+          bun-version: latest # You can also use a specific version
+      - run: bun install
       - name: Build & Deploy
         env:
           DATABASE_URL: ${{secrets.DATABASE_URL}}
