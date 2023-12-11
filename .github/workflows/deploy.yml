@@ -24,5 +24,6 @@ jobs:
           GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
           GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
         run: |
-          npx prisma generate
-          npx sst deploy
+          bunx prisma generate
+          bunx sst deploy
+          echo "Deployed to ${{secrets.NEXT_PUBLIC_URL}}"
