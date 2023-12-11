@@ -1,5 +1,5 @@
 import type { SSTConfig } from "sst";
-import { NextjsSite } from "sst/constructs";
+import { Bucket, NextjsSite } from "sst/constructs";
 
 export default {
   config(_input) {
@@ -10,6 +10,8 @@ export default {
   },
   stacks(app) {
     app.stack(function Site({ stack }) {
+      const bucket = new Bucket(stack, "public");
+
       const site = new NextjsSite(stack, "site", {
         environment: {
           DATABASE_URL: process.env.DATABASE_URL!,
@@ -19,6 +21,7 @@ export default {
           GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID!,
           GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET!,
         },
+        bind: [bucket],
       });
 
       stack.addOutputs({
