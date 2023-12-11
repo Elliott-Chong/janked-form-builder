@@ -33,4 +33,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
         run: |
           bunx prisma generate
-          bunx sst deploy
+          bunx sst deploy --stage prod
