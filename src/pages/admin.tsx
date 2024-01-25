@@ -1,25 +1,16 @@
-import FormPreview from "@/components/FormPreview";
 import Navbar from "@/components/Navbar";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
 import type { GetServerSideProps } from "next";
 import type { User } from "next-auth";
-import { useRouter } from "next/router";
 import React from "react";
 type Props = {
     user: User;
 };
 
 const AdminPage = ({ user }: Props) => {
-    const router = useRouter()
     const { data: allUsers } = api.form.getAllUsers.useQuery()
 
-    React.useEffect(() => {
-        if (user.role !== 'admin') {
-            router.push('/').catch(console.error)
-            return
-        }
-    }, [user, router])
 
     return (
         <>
@@ -43,7 +34,7 @@ const AdminPage = ({ user }: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const session = await getServerAuthSession(ctx);
-    if (!session?.user) {
+    if (!session?.user || session.user.role !== 'admin') {
         return {
             redirect: {
                 destination: "/",

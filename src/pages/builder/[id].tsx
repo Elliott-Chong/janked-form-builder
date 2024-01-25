@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
   const formSchema = await db.formSchema.findFirst({
-    where: { id: id as string },
+    where: { id: id as string, createdById: session.user.id },
     include: {
       formFields: {
         orderBy: { order: "asc" },

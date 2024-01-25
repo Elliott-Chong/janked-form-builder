@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
@@ -290,8 +291,16 @@ export const formRouter = createTRPCRouter({
       });
       return formSubmissions;
     }),
-  getAllUsers: protectedProcedure.query(async ({ ctx, input }) => {
-    const users = await ctx.db.user.findMany()
+  getAllUsers: adminProcedure.query(async ({ ctx }) => {
+    const users = await ctx.db.user.findMany({
+      select: {
+        name: true,
+        email: true,
+        role: true,
+        image: true,
+        id: true
+      }
+    })
     return users
   })
 });
