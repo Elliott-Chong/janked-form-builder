@@ -9,7 +9,7 @@ type Props = {
   };
 };
 
-const TextRenderer = ({ formValue }: Props) => {
+const TextRenderer = ({ formValue, ...props }: Props) => {
   return (
     <>
       <div>
@@ -29,6 +29,7 @@ const TextRenderer = ({ formValue }: Props) => {
           onChange={(e) => {
             formValue.value = e.target.value;
           }}
+          {...props}
         />
       </div>
     </>

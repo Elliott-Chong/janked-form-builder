@@ -15,7 +15,7 @@ type Props = {
   };
 };
 
-const SelectRenderer = ({ formValue }: Props) => {
+const SelectRenderer = ({ formValue, ...props }: Props) => {
   const options = JSON.parse(
     formValue.formField.options! ?? '[""]',
   ) as string[];
@@ -34,6 +34,7 @@ const SelectRenderer = ({ formValue }: Props) => {
         onValueChange={(e) => {
           formValue.value = e;
         }}
+        {...props}
       >
         <SelectTrigger>
           <SelectValue placeholder="Select an answer" />

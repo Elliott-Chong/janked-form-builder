@@ -58,6 +58,8 @@ model FormField {
     formSchemaId String
     options      String?
 
+    validation String @default("z.any()")
+
     formValues FormValue[]
 }
 
@@ -67,7 +69,7 @@ model FormValue {
     updatedAt DateTime @updatedAt
 
     formFieldId String
-    formField   FormField @relation(fields: [formFieldId], references: [id])
+    formField   FormField @relation(fields: [formFieldId], references: [id], onDelete: Cascade)
 
     value            String          @default("")
     User             User?           @relation(fields: [userId], references: [id])
@@ -126,16 +128,23 @@ model Session {
 }
 
 model User {
-    id            String       @id @default(cuid())
-    name          String?
-    email         String?      @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
-    FormValue     FormValue[]
-    FormSchema    FormSchema[]
+    id             String       @id @default(cuid())
+    name           String?
+    email          String?      @unique
+    emailVerified  DateTime?
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
+    role           UserRole     @default(user)
+    posts          Post[]
+    hashedPassword String       @default("80d01f091e6e96a9418548a7cac15758")
+    FormValue      FormValue[]
+    FormSchema     FormSchema[]
+}
+
+enum UserRole {
+    user
+    admin
 }
 
 model VerificationToken {

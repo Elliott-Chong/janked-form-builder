@@ -3,7 +3,8 @@
  * @see https://v0.dev/t/iSfsKtvFhGH
  */
 import type { FormSchema } from "@prisma/client";
-import FormCard from "./FormCard";
+import dynamic from "next/dynamic";
+const FormCard = dynamic(() => import("./FormCard"), { ssr: false });
 type Props = {
   forms: FormSchema[];
 };

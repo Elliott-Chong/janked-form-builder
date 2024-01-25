@@ -48,6 +48,17 @@ export const formRouter = createTRPCRouter({
       });
       return { id: formField.id };
     }),
+  saveValidation: protectedProcedure.input(z.object({
+    formFieldId: z.string(),
+    validation: z.string()
+  })).mutation(async ({ ctx, input }) => {
+    await ctx.db.formField.update({
+      where: { id: input.formFieldId },
+      data: {
+        validation: input.validation
+      }
+    })
+  }),
   saveField: protectedProcedure
     .input(
       z.object({
@@ -279,4 +290,8 @@ export const formRouter = createTRPCRouter({
       });
       return formSubmissions;
     }),
+  getAllUsers: protectedProcedure.query(async ({ ctx, input }) => {
+    const users = await ctx.db.user.findMany()
+    return users
+  })
 });

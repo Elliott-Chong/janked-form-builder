@@ -17,7 +17,7 @@ const FormBuilderPage = ({ user, formSchema }: Props) => {
   return (
     <>
       <Navbar user={user} />
-      <div className="mx-auto max-w-4xl px-10 pb-20">
+      <div className="max-w-4xl px-10 pb-20 mx-auto">
         <FormBuilder formSchema={formSchema} />
       </div>
     </>
@@ -35,8 +35,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-  const formSchema = await db.formSchema.findFirstOrThrow({
-    where: { id: id as string, createdById: session.user.id },
+  const formSchema = await db.formSchema.findFirst({
+    where: { id: id as string },
     include: {
       formFields: {
         orderBy: { order: "asc" },
