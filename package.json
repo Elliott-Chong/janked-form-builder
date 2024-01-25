@@ -43,6 +43,7 @@
     "next": "^14.0.0",
     "next-auth": "^4.24.4",
     "next-themes": "^0.2.1",
+    "playwright": "latest",
     "react": "18.2.0",
     "react-confetti": "^6.1.0",
     "react-dom": "18.2.0",
@@ -55,6 +56,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.1",
     "@types/eslint": "^8.44.2",
     "@types/node": "^18.16.0",
     "@types/react": "^18.2.33",
@@ -62,19 +64,22 @@
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "autoprefixer": "^10.4.14",
+    "aws-cdk-lib": "2.110.1",
+    "bun-types": "latest",
+    "constructs": "10.3.0",
     "eslint": "^8.47.0",
     "eslint-config-next": "^14.0.0",
     "postcss": "^8.4.27",
     "prettier": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.5.1",
     "prisma": "^5.1.1",
-    "tailwindcss": "^3.3.3",
-    "typescript": "^5.1.6",
     "sst": "^2.38.4",
-    "aws-cdk-lib": "2.110.1",
-    "constructs": "10.3.0"
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.1.6"
   },
   "ct3aMetadata": {
     "initVersion": "7.23.2"
-  }
+  },
+  "module": "index.ts",
+  "type": "module"
 }

@@ -29,7 +29,9 @@ export default function Home() {
     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
       <Card className="w-[300px]">
         <CardHeader>
-          <CardTitle>Welcome to INC Form 🔥!</CardTitle>
+          <CardTitle data-testid="landing-card-title">
+            Welcome to INC Form 🔥!
+          </CardTitle>
           <CardDescription>
             INC Form is a simple form builder that allows you to create forms
           </CardDescription>
